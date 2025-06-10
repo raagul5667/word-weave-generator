@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { Copy, RefreshCw } from "lucide-react";
+import { Copy, RefreshCw, ArrowLeft } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 
-const Index = () => {
+const AIGenerator = () => {
   const [prompt, setPrompt] = useState("");
   const [promptType, setPromptType] = useState("standard");
 
@@ -39,13 +39,12 @@ const Index = () => {
       return;
     }
 
-    // Simulate prompt generation
     const enhancedPrompt = `Enhanced ${promptType} prompt: ${prompt}`;
     setPrompt(enhancedPrompt);
     
     toast({
-      title: "Prompt generated!",
-      description: "Your AI prompt has been enhanced and optimized."
+      title: "AI prompt generated!",
+      description: "Your prompt has been enhanced and optimized."
     });
   };
 
@@ -66,59 +65,19 @@ const Index = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
+          <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to generators
+          </Link>
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-            Word Weave Generator
+            AI Prompt Generator
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Generate optimized prompts for any AI platform with our intelligent prompt engineering tool
-          </p>
-        </div>
-
-        {/* Navigation Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 max-w-6xl mx-auto">
-          <Link to="/ai-generator">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6 text-center">
-                <h3 className="font-semibold mb-2">AI Prompt Generator</h3>
-                <p className="text-sm text-muted-foreground">
-                  Generate prompts for general AI use cases
-                </p>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link to="/chatgpt-generator">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6 text-center">
-                <h3 className="font-semibold mb-2">ChatGPT Prompt Generator</h3>
-                <p className="text-sm text-muted-foreground">
-                  Optimized prompts for ChatGPT interactions
-                </p>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link to="/midjourney-generator">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6 text-center">
-                <h3 className="font-semibold mb-2">Midjourney Prompt Generator</h3>
-                <p className="text-sm text-muted-foreground">
-                  Create detailed prompts for Midjourney AI art
-                </p>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link to="/claude-generator">
-            <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-6 text-center">
-                <h3 className="font-semibold mb-2">Claude Prompt Generator</h3>
-                <p className="text-sm text-muted-foreground">
-                  Structured prompts for Claude AI assistant
-                </p>
-              </CardContent>
-            </Card>
-          </Link>
+          <div className="flex justify-center gap-4 mb-8">
+            <span className="px-4 py-2 text-sm bg-blue-100 rounded">AI Prompt Generator</span>
+            <Link to="/chatgpt-generator" className="px-4 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200">ChatGPT Prompt Generator</Link>
+            <Link to="/midjourney-generator" className="px-4 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200">Midjourney Prompt Generator</Link>
+            <Link to="/claude-generator" className="px-4 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200">Claude Prompt Generator</Link>
+          </div>
         </div>
 
         {/* Main Content */}
@@ -188,48 +147,9 @@ const Index = () => {
             </CardContent>
           </Card>
         </div>
-
-        {/* Features Section */}
-        <div className="grid md:grid-cols-3 gap-6 mt-12">
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <RefreshCw className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="font-semibold mb-2">Smart Enhancement</h3>
-              <p className="text-sm text-muted-foreground">
-                Our AI automatically enhances your prompts for better results across all platforms
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Copy className="w-6 h-6 text-purple-600" />
-              </div>
-              <h3 className="font-semibold mb-2">One-Click Copy</h3>
-              <p className="text-sm text-muted-foreground">
-                Copy optimized prompts instantly and paste them into your favorite AI tool
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <RefreshCw className="w-6 h-6 text-green-600" />
-              </div>
-              <h3 className="font-semibold mb-2">Multi-Platform</h3>
-              <p className="text-sm text-muted-foreground">
-                Generate prompts optimized for ChatGPT, Claude, Midjourney, and more
-              </p>
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </div>
   );
 };
 
-export default Index;
+export default AIGenerator;
