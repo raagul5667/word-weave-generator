@@ -4,9 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { Copy, RefreshCw, ArrowLeft } from "lucide-react";
+import { Copy } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
 
 const AIGenerator = () => {
   const [prompt, setPrompt] = useState("");
@@ -66,19 +65,9 @@ const AIGenerator = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to generators
-          </Link>
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-            AI Prompt Generator
+            GMI Prompt Engineer
           </h1>
-          <div className="flex justify-center gap-4 mb-8">
-            <span className="px-4 py-2 text-sm bg-blue-100 rounded">AI Prompt Generator</span>
-            <Link to="/chatgpt-generator" className="px-4 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200">ChatGPT Prompt Generator</Link>
-            <Link to="/midjourney-generator" className="px-4 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200">Midjourney Prompt Generator</Link>
-            <Link to="/claude-generator" className="px-4 py-2 text-sm bg-gray-100 rounded hover:bg-gray-200">Claude Prompt Generator</Link>
-          </div>
         </div>
 
         {/* Main Content - Two Column Layout */}
