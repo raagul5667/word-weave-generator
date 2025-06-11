@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 
 const AIGenerator = () => {
   const [prompt, setPrompt] = useState("");
+  const [generatedPrompt, setGeneratedPrompt] = useState("");
   const [promptType, setPromptType] = useState("standard");
 
   const promptTypes = [
@@ -40,7 +41,7 @@ const AIGenerator = () => {
     }
 
     const enhancedPrompt = `Enhanced ${promptType} prompt: ${prompt}`;
-    setPrompt(enhancedPrompt);
+    setGeneratedPrompt(enhancedPrompt);
     
     toast({
       title: "AI prompt generated!",
@@ -49,7 +50,7 @@ const AIGenerator = () => {
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(prompt);
+    navigator.clipboard.writeText(generatedPrompt);
     toast({
       title: "Copied to clipboard",
       description: "Your prompt has been copied successfully."
@@ -80,23 +81,26 @@ const AIGenerator = () => {
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="max-w-6xl mx-auto">
-          <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
-            <CardContent className="p-8">
-              {/* Prompt Input Area */}
-              <div className="mb-6">
-                <Textarea
-                  placeholder="I want a prompt that will..."
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  className="min-h-[200px] text-base border-2 border-gray-200 focus:border-blue-500 transition-colors resize-none"
-                />
-              </div>
+        {/* Main Content - Two Column Layout */}
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left Column - Input Card */}
+            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-8">
+                {/* Prompt Input Area */}
+                <div className="mb-6">
+                  <label className="block text-lg font-semibold mb-2">Give me an AI Prompt to:</label>
+                  <Textarea
+                    placeholder="I want a prompt that will..."
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    className="min-h-[150px] text-base border-2 border-gray-200 focus:border-blue-500 transition-colors resize-none"
+                  />
+                </div>
 
-              {/* Controls */}
-              <div className="flex flex-col md:flex-row gap-4 mb-8">
-                <div className="flex-1">
+                {/* Prompt Type Select */}
+                <div className="mb-8">
+                  <label className="block text-lg font-semibold mb-2">Prompt Type</label>
                   <Select value={promptType} onValueChange={setPromptType}>
                     <SelectTrigger className="h-12 border-2">
                       <SelectValue />
@@ -110,42 +114,66 @@ const AIGenerator = () => {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex gap-2">
+
+                {/* Generate Button */}
+                <div className="flex justify-center mb-8">
                   <Button 
                     onClick={handleGenerate}
-                    className="h-12 px-8 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold"
+                    className="h-12 px-12 bg-black hover:bg-gray-800 text-white font-semibold text-lg"
                   >
-                    <RefreshCw className="w-4 h-4 mr-2" />
                     Generate
                   </Button>
-                  <Button 
-                    onClick={handleCopy}
-                    variant="outline"
-                    className="h-12 px-4 border-2"
-                  >
-                    <Copy className="w-4 h-4" />
-                  </Button>
                 </div>
-              </div>
 
-              {/* Quick Actions */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4 text-gray-700">Quick Actions</h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {quickActions.map((action, index) => (
-                    <Button
-                      key={index}
-                      variant="outline"
-                      className="h-auto p-3 text-sm text-left justify-start hover:bg-blue-50 hover:border-blue-300 transition-all duration-200"
-                      onClick={() => handleQuickAction(action)}
-                    >
-                      {action}
-                    </Button>
-                  ))}
+                {/* Quick Actions */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-gray-700">Quick Actions</h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    {quickActions.map((action, index) => (
+                      <Button
+                        key={index}
+                        variant="outline"
+                        className="h-auto p-3 text-sm text-left justify-start hover:bg-blue-50 hover:border-blue-300 transition-all duration-200"
+                        onClick={() => handleQuickAction(action)}
+                      >
+                        {action}
+                      </Button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+
+            {/* Right Column - Generated Prompt Output */}
+            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-8">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-bold text-gray-800">Generated Prompt</h2>
+                  {generatedPrompt && (
+                    <Button 
+                      onClick={handleCopy}
+                      variant="outline"
+                      className="h-10 px-4 border-2"
+                    >
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copy
+                    </Button>
+                  )}
+                </div>
+                <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-4 min-h-[400px]">
+                  {generatedPrompt ? (
+                    <pre className="whitespace-pre-wrap text-sm text-gray-700 font-mono">
+                      {generatedPrompt}
+                    </pre>
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-gray-500">
+                      <p>Your generated prompt will appear here...</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>

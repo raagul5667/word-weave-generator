@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 
 const StableDiffusionGenerator = () => {
   const [idea, setIdea] = useState("a photo of a man eating spinach on a ship");
+  const [generatedPrompt, setGeneratedPrompt] = useState("");
   const [type, setType] = useState("3d-render");
 
   const typeOptions = [
@@ -32,7 +33,7 @@ const StableDiffusionGenerator = () => {
     }
 
     const enhancedPrompt = `${idea}, ${type} style, high quality, detailed, 8k resolution`;
-    setIdea(enhancedPrompt);
+    setGeneratedPrompt(enhancedPrompt);
     
     toast({
       title: "Stable Diffusion prompt generated!",
@@ -41,7 +42,7 @@ const StableDiffusionGenerator = () => {
   };
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(idea);
+    navigator.clipboard.writeText(generatedPrompt);
     toast({
       title: "Copied to clipboard",
       description: "Your Stable Diffusion prompt has been copied successfully."
@@ -68,56 +69,82 @@ const StableDiffusionGenerator = () => {
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="max-w-4xl mx-auto">
-          <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
-            <CardContent className="p-8">
-              {/* Idea Input */}
-              <div className="mb-6">
-                <label className="block text-lg font-semibold mb-2">Idea</label>
-                <Textarea
-                  placeholder="a photo of a man eating spinach on a ship"
-                  value={idea}
-                  onChange={(e) => setIdea(e.target.value)}
-                  className="min-h-[150px] text-base border-2 border-gray-200 focus:border-blue-500 transition-colors resize-none"
-                />
-              </div>
+        {/* Main Content - Two Column Layout */}
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left Column - Input Card */}
+            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-8">
+                {/* Idea Input */}
+                <div className="mb-6">
+                  <label className="block text-lg font-semibold mb-2">Idea</label>
+                  <Textarea
+                    placeholder="a photo of a man eating spinach on a ship"
+                    value={idea}
+                    onChange={(e) => setIdea(e.target.value)}
+                    className="min-h-[150px] text-base border-2 border-gray-200 focus:border-blue-500 transition-colors resize-none"
+                  />
+                </div>
 
-              {/* Type Select */}
-              <div className="mb-8">
-                <label className="block text-lg font-semibold mb-2">Type</label>
-                <Select value={type} onValueChange={setType}>
-                  <SelectTrigger className="h-12 border-2">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {typeOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                {/* Type Select */}
+                <div className="mb-8">
+                  <label className="block text-lg font-semibold mb-2">Type</label>
+                  <Select value={type} onValueChange={setType}>
+                    <SelectTrigger className="h-12 border-2">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {typeOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-              {/* Generate Button */}
-              <div className="flex gap-2 justify-center">
-                <Button 
-                  onClick={handleGenerate}
-                  className="h-12 px-12 bg-black hover:bg-gray-800 text-white font-semibold text-lg"
-                >
-                  Generate
-                </Button>
-                <Button 
-                  onClick={handleCopy}
-                  variant="outline"
-                  className="h-12 px-4 border-2"
-                >
-                  <Copy className="w-4 h-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                {/* Generate Button */}
+                <div className="flex justify-center">
+                  <Button 
+                    onClick={handleGenerate}
+                    className="h-12 px-12 bg-black hover:bg-gray-800 text-white font-semibold text-lg"
+                  >
+                    Generate
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Right Column - Generated Prompt Output */}
+            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-8">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-bold text-gray-800">Generated Prompt</h2>
+                  {generatedPrompt && (
+                    <Button 
+                      onClick={handleCopy}
+                      variant="outline"
+                      className="h-10 px-4 border-2"
+                    >
+                      <Copy className="w-4 h-4 mr-2" />
+                      Copy
+                    </Button>
+                  )}
+                </div>
+                <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-4 min-h-[400px]">
+                  {generatedPrompt ? (
+                    <pre className="whitespace-pre-wrap text-sm text-gray-700 font-mono">
+                      {generatedPrompt}
+                    </pre>
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-gray-500">
+                      <p>Your generated prompt will appear here...</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
