@@ -2,25 +2,41 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { Copy } from "lucide-react";
+import { Copy, RefreshCw } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 const AIGenerator = () => {
   const [prompt, setPrompt] = useState("");
   const [generatedPrompt, setGeneratedPrompt] = useState("");
   const [promptType, setPromptType] = useState("standard");
+  const [loading, setLoading] = useState(false);
 
   const promptTypes = [
-    { value: "standard", label: "Standard Prompt – For general use prompt generation" },
-    { value: "reasoning", label: "Reasoning Prompt – For reasoning tasks and complex problem solving" },
-    { value: "race", label: "Race Prompt – Follow the RACE Framework" },
+    {
+      value: "standard",
+      label: "Standard Prompt – For general use prompt generation"
+    },
+    {
+      value: "reasoning",
+      label: "Reasoning Prompt – For reasoning tasks and complex problem solving"
+    },
+    {
+      value: "race",
+      label: "Race Prompt – Follow the RACE Framework"
+    }
   ];
 
   const quickActions = [
     "Create a LinkedIn post",
-    "Draft a product description", 
+    "Draft a product description",
     "Write customer support response",
     "Write marketing copy",
     "Write a blog post outline",
@@ -29,7 +45,7 @@ const AIGenerator = () => {
     "Write a professional email"
   ];
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!prompt.trim()) {
       toast({
         title: "Please enter a prompt",
@@ -39,13 +55,35 @@ const AIGenerator = () => {
       return;
     }
 
-    const enhancedPrompt = `Enhanced ${promptType} prompt: ${prompt}`;
-    setGeneratedPrompt(enhancedPrompt);
-    
-    toast({
-      title: "AI prompt generated!",
-      description: "Your prompt has been enhanced and optimized."
-    });
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:8000/generate-structured-prompt/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ idea: prompt, prompt_type: promptType })
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch prompt");
+
+      const data = await response.text();
+      setGeneratedPrompt(data);
+
+      toast({
+        title: "AI prompt generated!",
+        description: "Your prompt has been enhanced and optimized."
+      });
+    } catch (error) {
+      console.error("Error generating prompt:", error);
+      toast({
+        title: "Error generating prompt",
+        description: "Please try again later.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCopy = () => {
@@ -63,20 +101,12 @@ const AIGenerator = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-            GMI Prompt Engineer
-          </h1>
-        </div>
-
-        {/* Main Content - Two Column Layout */}
+        {/* Main Content */}
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Left Column - Input Card */}
+            {/* Input Card */}
             <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
               <CardContent className="p-8">
-                {/* Prompt Input Area */}
                 <div className="mb-6">
                   <label className="block text-lg font-semibold mb-2">Give me an AI Prompt to:</label>
                   <Textarea
@@ -108,9 +138,11 @@ const AIGenerator = () => {
                 <div className="flex justify-center mb-8">
                   <Button 
                     onClick={handleGenerate}
-                    className="h-12 px-12 bg-black hover:bg-gray-800 text-white font-semibold text-lg"
+                    className="h-12 px-12 bg-red-600 hover:bg-red-700 text-white font-semibold text-lg flex items-center justify-center gap-2"
+                    disabled={loading}
                   >
-                    Generate
+                    {loading && <RefreshCw className="animate-spin w-5 h-5" />}
+                    {loading ? "Generating..." : "Generate"}
                   </Button>
                 </div>
 
@@ -133,7 +165,7 @@ const AIGenerator = () => {
               </CardContent>
             </Card>
 
-            {/* Right Column - Generated Prompt Output */}
+            {/* Output Card */}
             <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
               <CardContent className="p-8">
                 <div className="flex justify-between items-center mb-4">
@@ -149,13 +181,16 @@ const AIGenerator = () => {
                     </Button>
                   )}
                 </div>
-                <div className="bg-gray-50 border-2 border-gray-200 rounded-lg p-4 min-h-[400px]">
+                <div className="min-h-[400px]">
                   {generatedPrompt ? (
-                    <pre className="whitespace-pre-wrap text-sm text-gray-700 font-mono">
-                      {generatedPrompt}
-                    </pre>
+                    <Textarea
+                      value={generatedPrompt}
+                      onChange={(e) => setGeneratedPrompt(e.target.value)}
+                      className="min-h-[400px] text-sm font-mono border-2 border-gray-200 focus:border-blue-500 transition-colors resize-none"
+                      placeholder="Your generated prompt will appear here..."
+                    />
                   ) : (
-                    <div className="flex items-center justify-center h-full text-gray-500">
+                    <div className="flex items-center justify-center h-full text-gray-500 bg-gray-50 border-2 border-gray-200 rounded-lg">
                       <p>Your generated prompt will appear here...</p>
                     </div>
                   )}
